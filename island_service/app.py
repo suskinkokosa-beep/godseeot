@@ -1,15 +1,27 @@
 from flask import Flask, request, jsonify, abort
-import os, json, redis
+import os, json
 from urllib.parse import urljoin
 import psycopg2
 from psycopg2.extras import Json, RealDictCursor
 
 app = Flask(__name__)
-REDIS_HOST=os.environ.get('REDIS_HOST','redis')
-REDIS_PORT=int(os.environ.get('REDIS_PORT','6379'))
-redis_client=redis.Redis(host=REDIS_HOST,port=REDIS_PORT,decode_responses=True)
 
-DATABASE_URL = os.environ.get('DATABASE_URL', 'postgresql://postgres:postgres@postgres:5432/isleborn')
+REDIS_ENABLED = os.environ.get('REDIS_ENABLED', 'false').lower() == 'true'
+redis_client = None
+
+if REDIS_ENABLED:
+    try:
+        import redis
+        REDIS_HOST = os.environ.get('REDIS_HOST', 'localhost')
+        REDIS_PORT = int(os.environ.get('REDIS_PORT', '6379'))
+        redis_client = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
+        redis_client.ping()
+        app.logger.info('Redis connected')
+    except Exception as e:
+        app.logger.warn('Redis not available: %s', e)
+        redis_client = None
+
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
 def get_conn():
     return psycopg2.connect(DATABASE_URL)
@@ -70,11 +82,16 @@ def create_island():
             json.dump(island, f, indent=2)
     return jsonify({'status':'ok','owner':owner})
 
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({'status': 'ok', 'service': 'island_service'})
+
 @app.route('/island/<owner>', methods=['PUT'])
 def update_island(owner):
-    lock_key=f'lock:island:{owner}'
-    if not redis_client.set(lock_key,'1',nx=True,ex=10):
-        return jsonify({'status':'busy'}),409
+    if redis_client:
+        lock_key = f'lock:island:{owner}'
+        if not redis_client.set(lock_key, '1', nx=True, ex=10):
+            return jsonify({'status': 'busy'}), 409
 
     payload = request.get_json(force=True)
     island = payload.get('island')
