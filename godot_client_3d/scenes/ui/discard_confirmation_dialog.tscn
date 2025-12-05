@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="discard_dialog_scene_1"]
+
+[ext_resource path="res://scripts/ui/discard_confirmation_dialog.gd" type="Script" id=1]
+
+[node name="DiscardConfirmationDialog" type="AcceptDialog"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+dialog_text = "Вы уверены, что хотите выбросить этот предмет?"
+
+[node name="VBox" type="VBoxContainer" parent="."]
+
+[node name="ItemLabel" type="Label" parent="VBox"]
+text = "Предмет: "
+theme_override_font_sizes/font_size = 18
+
+[node name="WarningLabel" type="Label" parent="VBox"]
+text = "ВНИМАНИЕ: Предмет будет удалён без возможности восстановления!"
+theme_override_font_sizes/font_size = 16
+modulate = Color(1, 0, 0)
+

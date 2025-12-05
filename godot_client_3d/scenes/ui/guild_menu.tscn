@@ -1,0 +1,79 @@
+[gd_scene load_steps=3 format=3 uid="guild_menu_scene_1"]
+
+[ext_resource path="res://scripts/ui/guild_menu.gd" type="Script" id=1]
+
+[node name="GuildMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.1, 0.15, 0.95)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.8
+
+[node name="Title" type="Label" parent="VBox"]
+text = "Гильдия"
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+
+[node name="GuildName" type="Label" parent="VBox"]
+text = "-"
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBox"]
+
+[node name="HBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="InfoPanel" type="Panel" parent="VBox/HBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(300, 0)
+
+[node name="VBoxInfo" type="VBoxContainer" parent="VBox/HBox/InfoPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="LevelLabel" type="Label" parent="VBox/HBox/InfoPanel/VBoxInfo"]
+text = "Уровень гильдии: -"
+theme_override_font_sizes/font_size = 16
+
+[node name="MembersLabel" type="Label" parent="VBox/HBox/InfoPanel/VBoxInfo"]
+text = "Участники: - / -"
+theme_override_font_sizes/font_size = 16
+
+[node name="XPBar" type="ProgressBar" parent="VBox/HBox/InfoPanel/VBoxInfo"]
+custom_minimum_size = Vector2(0, 30)
+
+[node name="MembersPanel" type="Panel" parent="VBox/HBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(400, 0)
+
+[node name="VBoxMembers" type="VBoxContainer" parent="VBox/HBox/MembersPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MembersLabel2" type="Label" parent="VBox/HBox/MembersPanel/VBoxMembers"]
+text = "Участники:"
+theme_override_font_sizes/font_size = 18
+
+[node name="MembersList" type="ScrollContainer" parent="VBox/HBox/MembersPanel/VBoxMembers"]
+layout_mode = 2
+
+[node name="MemberItems" type="VBoxContainer" parent="VBox/HBox/MembersPanel/VBoxMembers/MembersList"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="VBox"]
+text = "Закрыть"
+

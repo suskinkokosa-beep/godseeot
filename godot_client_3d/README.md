@@ -1,1 +1,1 @@
-
+Godot 3D client prototype: open in Godot 4.x, assign token in player.gd export var or via UI, run scene.

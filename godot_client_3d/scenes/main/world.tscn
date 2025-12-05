@@ -1,0 +1,232 @@
+[gd_scene load_steps=20 format=3 uid="world_scene_1"]
+
+[ext_resource path="res://scripts/player/player_controller.gd" type="Script" id=1]
+[ext_resource path="res://scenes/ui/hud.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/systems/inventory_system.gd" type="Script" id=3]
+[ext_resource path="res://scripts/systems/crafting_system.gd" type="Script" id=4]
+[ext_resource path="res://scripts/player/camera_controller.gd" type="Script" id=5]
+[ext_resource path="res://scenes/environment/ocean.tscn" type="PackedScene" id=6]
+[ext_resource path="res://scripts/player/character_progression.gd" type="Script" id=7]
+[ext_resource path="res://scripts/systems/island_progression.gd" type="Script" id=8]
+[ext_resource path="res://scripts/systems/weather_system.gd" type="Script" id=9]
+[ext_resource path="res://scripts/systems/equipment_system.gd" type="Script" id=10]
+[ext_resource path="res://scripts/systems/style_system.gd" type="Script" id=11]
+[ext_resource path="res://scripts/systems/item_management.gd" type="Script" id=12]
+[ext_resource path="res://scripts/systems/quest_system.gd" type="Script" id=13]
+[ext_resource path="res://scripts/systems/currency_system.gd" type="Script" id=14]
+[ext_resource path="res://scripts/systems/monetization_system.gd" type="Script" id=15]
+[ext_resource path="res://scripts/integration/visual_improvements.gd" type="Script" id=16]
+[ext_resource path="res://scripts/integration/environment_visual_enhancement.gd" type="Script" id=17]
+[ext_resource path="res://scripts/integration/monster_spawn_handler.gd" type="Script" id=18]
+
+[node name="World" type="Node3D"]
+script = ExtResource( 1 )
+
+[node name="Ocean" parent="." instance=ExtResource( 6 )]
+
+[node name="ResourceRoot" type="Node3D" parent="." ]
+[node name="BuildingRoot" type="Node3D" parent="." ]
+[node name="LocalPlayer" type="MeshInstance3D" parent="." ]
+mesh = null
+[node name="HUD" parent="." instance=ExtResource( 2 )]
+[node name="Inventory" type="Node" parent="."]
+script = ExtResource( 3 )
+[node name="Crafting" type="Node" parent="."]
+script = ExtResource( 4 )
+inventory_path = NodePath("../Inventory")
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource( 5 )
+target_path = NodePath("../LocalPlayer")
+[node name="Camera3D" type="Camera3D" parent="CameraRig"]
+current = true
+fov = 75.0
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, -0.75, 0.433013, 0, 15, 0)
+light_color = Color(1, 0.95, 0.9, 1)
+shadow_enabled = true
+shadow_opacity = 0.7
+
+[node name="AmbientLight" type="Node3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="AmbientLight"]
+light_color = Color(0.8, 0.9, 1, 1)
+light_energy = 0.4
+
+[node name="CharacterProgression" type="Node" parent="."]
+script = ExtResource( 7 )
+
+[node name="IslandProgression" type="Node" parent="."]
+script = ExtResource( 8 )
+
+[node name="WeatherSystem" type="Node" parent="."]
+script = ExtResource( 9 )
+
+[node name="EquipmentSystem" type="Node" parent="."]
+script = ExtResource( 10 )
+
+[node name="StyleSystem" type="Node" parent="."]
+script = ExtResource( 11 )
+
+[node name="ItemManagement" type="Node" parent="."]
+script = ExtResource( 12 )
+
+[node name="QuestSystem" type="Node" parent="."]
+script = ExtResource( 13 )
+
+[node name="CurrencySystem" type="Node" parent="."]
+script = ExtResource( 14 )
+
+[node name="TradingSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/trading_system.gd")
+
+[node name="NPCSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/npc_system.gd")
+
+[node name="NPCWorkerSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/npc_worker_system.gd")
+
+[node name="GuildSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/guild_system.gd")
+
+[node name="UnderwaterSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/underwater_system.gd")
+
+[node name="ExpeditionSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/expedition_system.gd")
+
+[node name="WorldEventsSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/world_events_system.gd")
+
+[node name="ReputationSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/reputation_system.gd")
+
+[node name="BuildingSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/building_system.gd")
+
+[node name="MagicSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/magic_system.gd")
+
+[node name="OceanCurrentsSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/ocean_currents_system.gd")
+
+[node name="AIGuildSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/ai_guild_system.gd")
+
+[node name="NavalCombatSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/naval_combat_system.gd")
+
+[node name="ResourceGatheringSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/resource_gathering_system.gd")
+
+[node name="MarketSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/market_system.gd")
+
+[node name="ShipBlueprintSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/ship_blueprint_system.gd")
+
+[node name="DeathPenaltySystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/death_penalty_system.gd")
+
+[node name="MonsterDamageSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/monster_damage_system.gd")
+
+[node name="FishingSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/fishing_system.gd")
+
+[node name="IslandDefenseSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/island_defense_system.gd")
+
+[node name="RuinsSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/ruins_system.gd")
+
+[node name="AutomationSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/automation_system.gd")
+
+[node name="WorldMapSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/world_map_system.gd")
+
+[node name="ChatSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/chat_system.gd")
+
+[node name="AchievementSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/achievement_system.gd")
+
+[node name="SeasonSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/season_system.gd")
+
+[node name="FriendsSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/friends_system.gd")
+
+[node name="GuildWarSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/guild_war_system.gd")
+
+[node name="TradeRouteSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/trade_route_system.gd")
+
+[node name="PvPZoneSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/pvp_zone_system.gd")
+
+[node name="GuildIslandSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/guild_island_system.gd")
+
+[node name="DayNightCycleSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/day_night_cycle_system.gd")
+
+[node name="PlayerStatisticsSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/player_statistics_system.gd")
+
+[node name="TreasureSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/treasure_system.gd")
+
+[node name="FastTravelSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/fast_travel_system.gd")
+
+[node name="ContractSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/contract_system.gd")
+
+[node name="BuffDebuffSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/buff_debuff_system.gd")
+
+[node name="NotificationSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/notification_system.gd")
+
+[node name="BossSystem" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/boss_system.gd")
+
+[node name="AssetManager" type="Node" parent="."]
+script = ExtResource("res://scripts/systems/asset_manager.gd")
+
+[node name="CharacterVisualIntegration" type="Node" parent="."]
+script = ExtResource("res://scripts/integration/character_visual_integration.gd")
+
+[node name="MonsterVisualIntegration" type="Node" parent="."]
+script = ExtResource("res://scripts/integration/monster_visual_integration.gd")
+
+[node name="BuildingVisualIntegration" type="Node" parent="."]
+script = ExtResource("res://scripts/integration/building_visual_integration.gd")
+
+[node name="SoundIntegration" type="Node" parent="."]
+script = ExtResource("res://scripts/integration/sound_integration.gd")
+
+[node name="SoundEventIntegration" type="Node" parent="."]
+script = ExtResource("res://scripts/integration/sound_event_integration.gd")
+
+[node name="MonsterSpawnHandler" type="Node" parent="."]
+script = ExtResource( 18 )
+
+[node name="MonsterRoot" type="Node3D" parent="."]
+
+[node name="MonetizationSystem" type="Node" parent="."]
+script = ExtResource( 15 )
+
+[node name="VisualImprovements" type="Node" parent="."]
+script = ExtResource( 16 )
+
+[node name="EnvironmentVisualEnhancement" type="Node" parent="."]
+script = ExtResource( 17 )
+
+

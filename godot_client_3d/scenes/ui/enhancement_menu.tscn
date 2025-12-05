@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="enhancement_menu_scene_1"]
+
+[ext_resource path="res://scripts/ui/enhancement_menu.gd" type="Script" id=1]
+
+[node name="EnhancementMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.1, 0.15, 0.95)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.8
+
+[node name="Title" type="Label" parent="VBox"]
+text = "Заточка предмета"
+theme_override_font_sizes/font_size = 28
+horizontal_alignment = 1
+
+[node name="ItemLabel" type="Label" parent="VBox"]
+text = "Предмет: Не выбран"
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+
+[node name="CurrentLevelLabel" type="Label" parent="VBox"]
+text = "Текущий уровень: +0"
+theme_override_font_sizes/font_size = 16
+
+[node name="SuccessChanceLabel" type="Label" parent="VBox"]
+text = "Шанс успеха: 100%"
+theme_override_font_sizes/font_size = 16
+
+[node name="RiskLabel" type="Label" parent="VBox"]
+text = "Риск: Безопасно"
+theme_override_font_sizes/font_size = 16
+modulate = Color(0, 1, 0)
+
+[node name="HSeparator" type="HSeparator" parent="VBox"]
+
+[node name="MaterialLabel" type="Label" parent="VBox"]
+text = "Материал для заточки:"
+theme_override_font_sizes/font_size = 18
+
+[node name="MaterialList" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+
+[node name="EnhanceButton" type="Button" parent="VBox"]
+text = "Заточить"
+disabled = true
+
+[node name="ResultLabel" type="Label" parent="VBox"]
+text = ""
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+
+[node name="CloseButton" type="Button" parent="VBox"]
+text = "Закрыть"
+
