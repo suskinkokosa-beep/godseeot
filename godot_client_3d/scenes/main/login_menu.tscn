@@ -1,27 +1,85 @@
-[gd_scene load_steps=2 format=3 uid="login_menu_scene_1"]
-[ext_resource path="res://scripts/ui/login_menu.gd" type="Script" id=1]
+[gd_scene load_steps=2 format=3 uid="uid://c8d27cf72grju"]
+
+[ext_resource type="Script" uid="uid://ck8g67cuoeqd5" path="res://scripts/ui/login_menu.gd" id="1"]
 
 [node name="LoginMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
 
-[node name="VBox" type="VBoxContainer" parent="."]
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-alignment = 1
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.08, 0.12, 1)
 
-[node name="Email" type="LineEdit" parent="VBox"]
-placeholder_text = "Email"
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Password" type="LineEdit" parent="VBox"]
-placeholder_text = "Password"
-secret = true
+[node name="Panel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(400, 450)
+layout_mode = 2
 
-[node name="LoginButton" type="Button" parent="VBox"]
-text = "Login"
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/Panel"]
+layout_mode = 2
 
-[node name="Status" type="Label" parent="VBox"]
+[node name="Title" type="Label" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Isleborn Online"
 horizontal_alignment = 1
 
+[node name="Subtitle" type="Label" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.6, 0.7, 1)
+text = "Построй свой остров в океане"
+horizontal_alignment = 1
 
+[node name="Spacer1" type="Control" parent="CenterContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="EmailLabel" type="Label" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+text = "Email"
+
+[node name="Email" type="LineEdit" parent="CenterContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+placeholder_text = "your@email.com"
+
+[node name="PasswordLabel" type="Label" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+text = "Пароль"
+
+[node name="Password" type="LineEdit" parent="CenterContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+placeholder_text = "Введите пароль"
+secret = true
+
+[node name="Spacer2" type="Control" parent="CenterContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="LoginButton" type="Button" parent="CenterContainer/Panel/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Войти"
+
+[node name="Status" type="Label" parent="CenterContainer/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.7, 1, 1)
+horizontal_alignment = 1
