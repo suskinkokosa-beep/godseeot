@@ -1,0 +1,58 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "isleborn-gateway-overview",
+    "title": "Isleborn Gateway Overview",
+    "schemaVersion": 27,
+    "version": 1,
+    "refresh": "5s",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "HTTP requests by status",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "sum by (status) (rate(gateway_http_requests_total[1m]))"
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "WebSocket connections (total)",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "rate(gateway_ws_connections_total[1m])"
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Token validation failures",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "targets": [
+          {
+            "expr": "rate(gateway_token_validation_failures_total[1m])"
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": false
+}

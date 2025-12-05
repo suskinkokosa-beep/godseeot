@@ -1,0 +1,60 @@
+extends Node
+# Headless Godot server: handles auth_init, spawn, move, snapshot
+var peers = {}
+var peer_to_eid = {}
+var entities = {}
+
+var ws_server
+
+func _ready():
+    ws_server = WebSocketServer.new()
+    var ok = ws_server.listen(8090)
+    if ok != OK:
+        print("Failed to listen on 8090", ok)
+        return
+    print("Godot WebSocketServer listening on 8090")
+    set_process(true)
+    set_physics_process(true)
+
+func _physics_process(delta):
+    while ws_server.is_connection_available():
+        var peer = ws_server.take_connection()
+        if peer:
+            var id = peer.get_unique_id()
+            peers[id] = peer
+            print("New peer:", id)
+
+    for id in peers.keys():
+        var peer = peers[id]
+        while peer.get_available_packet_count() > 0:
+            var pkt = peer.get_packet().get_string_from_utf8()
+            var msg = JSON.parse(pkt)
+            if typeof(msg) == TYPE_DICTIONARY and msg.has("t"):
+                var t = msg["t"]
+                if t == "auth_init":
+                    var sub = msg.has("sub") ? str(msg["sub"]) : str(id)
+                    var eid = "p_" + sub
+                    peer_to_eid[id] = eid
+                    entities[eid] = {"pos":[0,0,0], "rot":0.0}
+                    var spawn = {"t":"spawn","id":eid,"pos":[0,0,0],"rot":0}
+                    peer.put_packet(JSON.print(spawn).to_utf8())
+                elif t == "move":
+                    var eid = peer_to_eid.get(id, "")
+                    if eid != "" and entities.has(eid):
+                        var dx = float(msg.get("dx",0))
+                        var dz = float(msg.get("dz",0))
+                        var st = entities[eid]
+                        st["pos"][0] += dx
+                        st["pos"][2] += dz
+                        entities[eid] = st
+
+func _process(delta):
+    if Engine.get_frames_drawn() % 60 == 0:
+        var snapshot = {"t":"snapshot","tick":OS.get_unix_time(),"players":[]}
+        for eid in entities.keys():
+            var st = entities[eid]
+            snapshot["players"].append({"id":eid,"pos":st["pos"],"rot":st["rot"]})
+        var s = JSON.print(snapshot)
+        for id in peers.keys():
+            var peer = peers[id]
+            peer.put_packet(s.to_utf8())

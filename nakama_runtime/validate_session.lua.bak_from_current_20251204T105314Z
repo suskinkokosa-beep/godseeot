@@ -1,0 +1,79 @@
+-- validate_session.lua (improved)
+-- Receives JSON payload: { "token": "<jwt>" }
+-- Returns JSON string: { "valid": true/false, "sub": "<sub>", "username": "<username>", "reason": "<optional>" }
+-- IMPORTANT: This implementation **does not** verify the JWT signature.
+-- It decodes the JWT payload and checks the `exp` claim (expiration) and returns basic fields.
+-- For production you MUST do one of:
+--  - Have the Gateway validate JWT signature with JWKS (recommended).
+--  - Or validate the Nakama session on the server-side using a server-side secret (session.encryption_key)
+--  - Or store active session IDs in Nakama storage at authenticate time and verify lookup here.
+local nk = require('nakama')
+
+local function b64_decode(data)
+  -- base64 decode with URL-safe replacements and padding
+  local b = data:gsub('-', '+'):gsub('_', '/')
+  local padding = #b % 4
+  if padding == 2 then b = b .. '==' elseif padding == 3 then b = b .. '=' end
+  local ok, decoded = pcall(function() return nk.base64_decode(b) end)
+  if not ok then return nil end
+  return decoded
+end
+
+-- decode JWT payload (naive)
+local function decode_jwt_payload(token)
+  if not token then return nil, 'no_token' end
+  local parts = {}
+  for part in string.gmatch(token, '([^%.]+)') do
+    table.insert(parts, part)
+  end
+  if #parts < 2 then return nil, 'invalid_token_format' end
+  local payload_b64 = parts[2]
+  local payload_json = b64_decode(payload_b64)
+  if not payload_json then return nil, 'b64_decode_failed' end
+  local ok, payload = pcall(function() return nk.json_decode(payload_json) end)
+  if not ok then return nil, 'json_decode_failed' end
+  return payload, nil
+end
+
+local function validate_session(ctx, logger, nk_module, payload)
+  logger:info("validate_session called with payload: %s", payload)
+  local ok, data = pcall(function() return nk_module.json_decode(payload) end)
+  if not ok or type(data) ~= 'table' then
+    logger:error("validate_session: invalid rpc payload")
+    error("invalid rpc payload")
+  end
+  local token = data.token
+  if not token then error("missing token") end
+
+  local claims, err = decode_jwt_payload(token)
+  if not claims then
+    logger:info("validate_session: decode failed: %s", err)
+    return nk_module.json_encode({ valid = false, reason = err })
+  end
+
+  -- check exp claim if present
+  if claims.exp then
+    local now = os.time()
+    -- claims.exp may be number or string
+    local exp = tonumber(claims.exp) or 0
+    if exp > 0 and now >= exp then
+      logger:info("validate_session: token expired at %s (now %s)", exp, now)
+      return nk_module.json_encode({ valid = false, reason = 'expired' })
+    end
+  end
+
+  -- extract useful fields
+  local sub = claims.sub or nil
+  local username = claims.name or claims.preferred_username or claims.username or nil
+
+  local res = { valid = true, sub = sub, username = username }
+  logger:info("validate_session: returning %s", nk_module.json_encode(res))
+  return nk_module.json_encode(res)
+end
+
+local function InitModule(ctx, logger, nk_module, initializer)
+  initializer.register_rpc("validate_session", validate_session)
+  logger:info("validate_session RPC registered (improved - no signature check).")
+end
+
+return InitModule

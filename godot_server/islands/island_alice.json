@@ -1,0 +1,85 @@
+{
+  "owner": "alice",
+  "owner_name": "Alice",
+  "level": 1,
+  "size": {
+    "width": 5,
+    "height": 5
+  },
+  "bounds": {
+    "radius": 3.0
+  },
+  "spawn_pos": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "resources": [
+    {
+      "type": "palm_tree",
+      "pos": [
+        1.142,
+        0.0,
+        0.821
+      ],
+      "amount": 5
+    },
+    {
+      "type": "palm_tree",
+      "pos": [
+        0.067,
+        0.0,
+        0.114
+      ],
+      "amount": 6
+    },
+    {
+      "type": "palm_tree",
+      "pos": [
+        -0.13,
+        0.0,
+        -0.241
+      ],
+      "amount": 5
+    },
+    {
+      "type": "palm_tree",
+      "pos": [
+        1.416,
+        0.0,
+        -0.174
+      ],
+      "amount": 8
+    },
+    {
+      "type": "palm_tree",
+      "pos": [
+        0.196,
+        0.0,
+        1.385
+      ],
+      "amount": 6
+    },
+    {
+      "type": "stone_node",
+      "pos": [
+        0.096,
+        0.0,
+        -0.016
+      ],
+      "amount": 5
+    }
+  ],
+  "buildings": [
+    {
+      "type": "campfire",
+      "pos": [
+        0.5,
+        0.0,
+        0.2
+      ]
+    }
+  ],
+  "seed": 1000,
+  "generated_at": "2025-12-04T11:30:35.468502Z"
+}

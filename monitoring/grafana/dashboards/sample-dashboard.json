@@ -1,0 +1,11 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": null,
+    "title": "Isleborn Gateway Overview",
+    "panels": [],
+    "schemaVersion": 27,
+    "version": 0
+  },
+  "overwrite": false
+}

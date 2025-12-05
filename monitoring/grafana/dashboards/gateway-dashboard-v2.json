@@ -1,0 +1,88 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "isleborn-gateway-overview-v2",
+    "title": "Isleborn Gateway Overview (v2)",
+    "schemaVersion": 27,
+    "version": 1,
+    "refresh": "5s",
+    "panels": [
+      {
+        "type": "graph",
+        "title": "HTTP requests by status (rate)",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "sum by (status) (rate(gateway_http_requests_total[1m]))"
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "WebSocket connections (rate)",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "rate(gateway_ws_connections_total[1m])"
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Token validation failures (rate)",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "targets": [
+          {
+            "expr": "rate(gateway_token_validation_failures_total[1m])"
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Rate limit rejections (rate)",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "targets": [
+          {
+            "expr": "rate(gateway_rate_limit_rejections_total[1m])"
+          }
+        ]
+      },
+      {
+        "type": "graph",
+        "title": "Request latency (histogram)",
+        "gridPos": {
+          "h": 8,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        },
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(gateway_request_latency_seconds_bucket[1m])) by (le))"
+          }
+        ]
+      }
+    ]
+  },
+  "overwrite": false
+}

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="server_main_scene_1"]
+[ext_resource path="res://src/main/server_main.gd" type="Script" id=1]
+[node name="ServerRoot" type="Node3D"]
+script = ExtResource( 1 )
+
+
