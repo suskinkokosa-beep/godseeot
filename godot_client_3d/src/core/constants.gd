@@ -6,7 +6,7 @@ extends Resource
 ## systems already have a central place to import shared values.
 ##
 
-class_name Constants
+# Removed class_name to avoid autoload conflict
 
 const PROJECT_NAME := "Isleborn Online"
 const VERSION := "0.1.0"
