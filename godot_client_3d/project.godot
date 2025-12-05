@@ -12,6 +12,7 @@ config_version=5
 
 config/name="Isleborn Online Client"
 config/version="0.1.0"
+run/main_scene="res://scenes/main/login_menu.tscn"
 config/features=PackedStringArray("4.4")
 
 [autoload]
