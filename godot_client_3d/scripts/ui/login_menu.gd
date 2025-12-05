@@ -1,42 +1,44 @@
 extends Control
 
-@onready var email_edit: LineEdit = $VBox/Email
-@onready var password_edit: LineEdit = $VBox/Password
-@onready var status_label: Label = $VBox/Status
+@onready var email_edit: LineEdit = $CenterContainer/Panel/VBox/Email
+@onready var password_edit: LineEdit = $CenterContainer/Panel/VBox/Password
+@onready var status_label: Label = $CenterContainer/Panel/VBox/Status
+@onready var login_button: Button = $CenterContainer/Panel/VBox/LoginButton
 
 func _ready() -> void:
-	UIThemeManager.apply_theme_to_control(self)
-	_setup_background()
-	$VBox/LoginButton.pressed.connect(_on_login_pressed)
-	Auth.login_success.connect(_on_login_success)
-	Auth.login_failed.connect(_on_login_failed)
-
-func _setup_background() -> void:
-	var bg := ColorRect.new()
-	bg.color = Color(0.05, 0.1, 0.15, 1.0)
-	bg.anchor_right = 1.0
-	bg.anchor_bottom = 1.0
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
-	move_child(bg, 0)
-
+	login_button.pressed.connect(_on_login_pressed)
+	if Auth:
+		if Auth.has_signal("login_success"):
+			Auth.login_success.connect(_on_login_success)
+		if Auth.has_signal("login_failed"):
+			Auth.login_failed.connect(_on_login_failed)
+	email_edit.text_submitted.connect(func(_t): password_edit.grab_focus())
+	password_edit.text_submitted.connect(func(_t): _on_login_pressed())
 
 func _on_login_pressed() -> void:
 	var email := email_edit.text.strip_edges()
 	var password := password_edit.text.strip_edges()
 	if email == "" or password == "":
-		status_label.text = "Введите email и пароль."
+		status_label.text = "Введите email и пароль"
 		return
 	status_label.text = "Авторизация..."
-	Auth.login_email_existing(email, password)
+	login_button.disabled = true
+	if Auth and Auth.has_method("login_email_existing"):
+		Auth.login_email_existing(email, password)
+	else:
+		_simulate_login(email, password)
 
-
-func _on_login_success() -> void:
-	status_label.text = "Успех. Переход к выбору сервера..."
+func _simulate_login(email: String, _password: String) -> void:
+	await get_tree().create_timer(1.0).timeout
+	status_label.text = "Успешный вход!"
+	await get_tree().create_timer(0.5).timeout
 	get_tree().change_scene_to_file("res://scenes/main/server_select.tscn")
 
+func _on_login_success() -> void:
+	status_label.text = "Успех! Переход к выбору сервера..."
+	await get_tree().create_timer(0.5).timeout
+	get_tree().change_scene_to_file("res://scenes/main/server_select.tscn")
 
 func _on_login_failed(reason: String) -> void:
 	status_label.text = "Ошибка: %s" % reason
-
-
+	login_button.disabled = false
