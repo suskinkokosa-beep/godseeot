@@ -1,5 +1,5 @@
 extends Node
-class_name SkillBookDatabase
+# class_name SkillBookDatabase  # Removed to avoid autoload conflict
 
 ## База данных книг навыков
 ## Книги можно получить из различных источников

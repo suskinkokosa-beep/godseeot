@@ -1,5 +1,5 @@
 extends Node
-class_name SkillDatabase
+# class_name SkillDatabase  # Removed to avoid autoload conflict
 
 ## База данных навыков Isleborn Online
 ## 100 активных навыков + 50 пассивных навыков

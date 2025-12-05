@@ -1,5 +1,5 @@
 extends Node
-class_name EnhancementMaterials
+# class_name EnhancementMaterials  # Removed to avoid autoload conflict
 
 ## База данных материалов для заточки
 ## Материалы выпадают с монстров с небольшим шансом

@@ -1,5 +1,5 @@
 extends Node
-class_name BiomeDatabase
+# class_name BiomeDatabase  # Removed to avoid autoload conflict
 
 ## Полная база данных океанских биомов Isleborn Online
 ## Согласно GDD: Tropical Shallow, Deep Blue, Mist Sea, Coldwater, Blackwater

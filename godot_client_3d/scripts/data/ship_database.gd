@@ -1,5 +1,5 @@
 extends Node
-class_name ShipDatabase
+# class_name ShipDatabase  # Removed to avoid autoload conflict
 
 ## Полная база данных кораблей Isleborn Online
 ## Согласно GDD: от плота до флагмана гильдии

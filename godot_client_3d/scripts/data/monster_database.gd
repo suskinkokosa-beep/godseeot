@@ -1,5 +1,5 @@
 extends Node
-class_name MonsterDatabase
+# class_name MonsterDatabase  # Removed to avoid autoload conflict
 
 ## Полная база данных монстров Isleborn Online
 ## Согласно GDD: T1-T5, мировые боссы, более 70 видов

@@ -1,5 +1,5 @@
 extends Node
-class_name RecipeDatabase
+# class_name RecipeDatabase  # Removed to avoid autoload conflict
 
 ## Registry of crafting recipes (weapons, tools, ships, buildings, alchemy).
 

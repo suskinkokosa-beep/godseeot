@@ -1,5 +1,5 @@
 extends Node
-class_name ItemDatabase
+# class_name ItemDatabase  # Removed to avoid autoload conflict
 
 ## Центральный реестр всех предметов Isleborn Online
 ## Поддерживает: оружие, броню, аксессуары, ресурсы, материалы
