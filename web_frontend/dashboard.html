@@ -962,7 +962,7 @@
         const newsList = document.getElementById('newsList');
         newsList.innerHTML = '';
         
-        let news = data.news || [];
+        let news = Array.isArray(data) ? data : [];
         
         if (news.length === 0) {
           news = [
@@ -975,18 +975,22 @@
           const newsItem = document.createElement('div');
           newsItem.className = 'news-item';
           
-          const badgeClass = item.type === 'event' ? 'badge-event' : 
-                            item.type === 'update' ? 'badge-update' : 'badge-new';
-          const badgeText = item.type === 'event' ? 'СОБЫТИЕ' : 
-                           item.type === 'update' ? 'ОБНОВЛЕНИЕ' : 'НОВОЕ';
+          const badge = item.badge || item.type || 'new';
+          const badgeClass = badge === 'event' ? 'badge-event' : 
+                            badge === 'update' ? 'badge-update' : 'badge-new';
+          const badgeText = badge === 'event' ? 'СОБЫТИЕ' : 
+                           badge === 'update' ? 'ОБНОВЛЕНИЕ' : 'НОВОЕ';
+          
+          const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('ru-RU') : 
+                         item.date || new Date().toISOString().split('T')[0];
           
           newsItem.innerHTML = `
             <h3>
               ${item.title}
-              ${item.isNew ? `<span class="news-badge ${badgeClass}">${badgeText}</span>` : ''}
+              <span class="news-badge ${badgeClass}">${badgeText}</span>
             </h3>
             <p>${item.content}</p>
-            <div class="news-date">${item.date}</div>
+            <div class="news-date">${dateStr}</div>
           `;
           
           newsList.appendChild(newsItem);
@@ -1036,7 +1040,7 @@
     
     async function loadOnlineCount() {
       try {
-        const response = await fetch(API_BASE + '/api/online');
+        const response = await fetch(API_BASE + '/api/stats/online');
         const data = await response.json();
         document.getElementById('onlineCount').textContent = data.online || 0;
       } catch (e) {
@@ -1047,7 +1051,7 @@
     function startHeartbeat() {
       setInterval(async () => {
         try {
-          await fetch(API_BASE + '/api/online/heartbeat', {
+          await fetch(API_BASE + '/api/stats/ping', {
             method: 'POST',
             headers: { 
               'Content-Type': 'application/json',
@@ -1067,7 +1071,8 @@
         const tbody = document.getElementById('leaderboardBody');
         tbody.innerHTML = '';
         
-        (data.leaderboard || []).forEach((player, index) => {
+        const leaderboard = Array.isArray(data) ? data : [];
+        leaderboard.forEach((player, index) => {
           const tr = document.createElement('tr');
           const rankClass = index < 3 ? `rank-${index + 1}` : '';
           tr.innerHTML = `
@@ -1075,13 +1080,13 @@
             <td>${player.username}</td>
             <td>${player.level}</td>
             <td>${player.score}</td>
-            <td>${player.pvp_kills}</td>
-            <td>${player.pve_kills}</td>
+            <td>${player.pvp}</td>
+            <td>${player.pve}</td>
           `;
           tbody.appendChild(tr);
         });
         
-        if (data.leaderboard?.length === 0) {
+        if (leaderboard.length === 0) {
           tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #708090;">Рейтинг пока пуст. Будьте первым!</td></tr>';
         }
       } catch (e) {
@@ -1099,12 +1104,13 @@
         guidesList.innerHTML = '';
         guideContent.classList.add('hidden');
         
-        (data.guides || []).forEach(guide => {
+        const guides = Array.isArray(data) ? data : [];
+        guides.forEach(guide => {
           const card = document.createElement('div');
           card.className = 'guide-card';
           card.innerHTML = `
             <h3><span class="icon">${guide.icon || '&#128214;'}</span> ${guide.title}</h3>
-            <p>Категория: ${guide.category}</p>
+            <p>${guide.description || 'Категория: ' + (guide.category || 'general')}</p>
           `;
           card.onclick = () => showGuide(guide);
           guidesList.appendChild(card);
