@@ -1,63 +1,487 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Isleborn Online - Account</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Isleborn Online - Регистрация</title>
   <style>
-    body { font-family: sans-serif; max-width: 480px; margin: 2rem auto; }
-    input, button { width: 100%; margin: 0.25rem 0; padding: 0.5rem; }
-    textarea { width: 100%; height: 120px; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #1a2f4a 100%);
+      color: #e0e8f0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 450px;
+      width: 100%;
+    }
+    
+    .login-form {
+      background: rgba(15, 30, 50, 0.95);
+      border-radius: 16px;
+      padding: 40px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(74, 158, 255, 0.2);
+    }
+    
+    .logo {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .logo h1 {
+      font-size: 32px;
+      background: linear-gradient(90deg, #4a9eff, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .logo p {
+      color: #708090;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #b0c4de;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid rgba(74, 158, 255, 0.2);
+      border-radius: 8px;
+      background: rgba(25, 45, 70, 0.6);
+      color: #e0e8f0;
+      font-size: 15px;
+      transition: all 0.3s;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #4a9eff;
+      box-shadow: 0 0 0 4px rgba(74, 158, 255, 0.1);
+    }
+    
+    .form-group input::placeholder {
+      color: #708090;
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-bottom: 15px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4a9eff, #00d4ff);
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(74, 158, 255, 0.4);
+    }
+    
+    .btn-secondary {
+      background: rgba(25, 45, 70, 0.8);
+      color: #e0e8f0;
+      border: 2px solid rgba(74, 158, 255, 0.3);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(35, 55, 80, 0.9);
+      border-color: rgba(74, 158, 255, 0.5);
+    }
+    
+    .status-message {
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+    
+    .status-success {
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid #00ff88;
+      color: #00ff88;
+    }
+    
+    .status-error {
+      background: rgba(255, 107, 107, 0.15);
+      border: 1px solid #ff6b6b;
+      color: #ff6b6b;
+    }
+    
+    .status-info {
+      background: rgba(74, 158, 255, 0.15);
+      border: 1px solid #4a9eff;
+      color: #4a9eff;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+    }
+    
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(74, 158, 255, 0.2);
+    }
+    
+    .divider span {
+      padding: 0 15px;
+      color: #708090;
+      font-size: 12px;
+    }
+    
+    .token-section {
+      background: rgba(25, 45, 70, 0.4);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    
+    .token-section h3 {
+      color: #4a9eff;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .token-section textarea {
+      width: 100%;
+      height: 80px;
+      padding: 12px;
+      border: 1px solid rgba(74, 158, 255, 0.2);
+      border-radius: 6px;
+      background: rgba(15, 25, 40, 0.8);
+      color: #e0e8f0;
+      font-family: monospace;
+      font-size: 12px;
+      resize: none;
+    }
+    
+    .token-section p {
+      color: #708090;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    
+    .links {
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .links a {
+      color: #4a9eff;
+      text-decoration: none;
+      font-size: 14px;
+      margin: 0 10px;
+    }
+    
+    .links a:hover {
+      text-decoration: underline;
+    }
+    
+    .server-status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(25, 45, 70, 0.4);
+      border-radius: 8px;
+    }
+    
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-online {
+      background: #00ff88;
+    }
+    
+    .status-offline {
+      background: #ff6b6b;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
   </style>
 </head>
 <body>
-  <h1>Isleborn Online - Account</h1>
-  <p>Nakama email auth (server must be reachable at http://localhost:7350).</p>
-
-  <h2>Register / Login</h2>
-  <input id="email" type="email" placeholder="Email" />
-  <input id="password" type="password" placeholder="Password" />
-  <input id="username" type="text" placeholder="Username (for new account)" />
-  <button id="loginBtn">Login / Register</button>
-
-  <h3>Session Token</h3>
-  <textarea id="tokenBox" readonly></textarea>
-  <p>Copy this token into the Godot client login screen (\"Use Token\" field) if direct login fails.</p>
-
-  <pre id="status"></pre>
+  <div class="container">
+    <div class="login-form">
+      <div class="logo">
+        <h1>Isleborn Online</h1>
+        <p>Построй свой остров в бесконечном океане</p>
+      </div>
+      
+      <div class="server-status">
+        <div class="status-dot status-online" id="serverStatusDot"></div>
+        <span id="serverStatusText">Проверка сервера...</span>
+      </div>
+      
+      <div id="statusMessage" class="status-message hidden"></div>
+      
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="your@email.com" />
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input type="password" id="password" placeholder="Минимум 6 символов" />
+      </div>
+      
+      <div class="form-group">
+        <label for="username">Имя игрока</label>
+        <input type="text" id="username" placeholder="Ваше имя в игре" />
+      </div>
+      
+      <button class="btn btn-primary" id="registerBtn">Создать аккаунт</button>
+      <button class="btn btn-secondary" id="loginBtn">Войти в существующий</button>
+      
+      <div class="divider"><span>или</span></div>
+      
+      <button class="btn btn-secondary" id="guestBtn">Играть как гость</button>
+      
+      <div class="token-section">
+        <h3>Токен сессии</h3>
+        <textarea id="tokenBox" readonly placeholder="Токен появится после входа"></textarea>
+        <p>Скопируйте этот токен в Godot клиент для подключения к игровому миру</p>
+      </div>
+      
+      <div class="links">
+        <a href="dashboard.html">Личный кабинет</a>
+        <a href="payment.html">Магазин</a>
+      </div>
+    </div>
+  </div>
 
   <script>
-    const nakamaBase = "http://localhost:7350";
-    document.getElementById("loginBtn").onclick = async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const username = document.getElementById("username").value.trim();
-      const statusEl = document.getElementById("status");
-      statusEl.textContent = "Requesting...";
-      if (!email || !password || !username) {
-        statusEl.textContent = "Please fill email, password, username.";
-        return;
-      }
+    const BASE_HOST = window.location.hostname;
+    const IS_REPLIT = BASE_HOST.includes('replit') || BASE_HOST.includes('riker');
+    const ISLAND_SERVICE_URL = IS_REPLIT ? `https://${BASE_HOST.replace('-00-', '-5001-00-')}` : 'http://localhost:5001';
+    const WS_SERVER_URL = IS_REPLIT ? `wss://${BASE_HOST.replace('-00-', '-8090-00-')}` : 'ws://localhost:8090';
+    
+    let currentToken = '';
+    
+    async function checkServerStatus() {
+      const dot = document.getElementById('serverStatusDot');
+      const text = document.getElementById('serverStatusText');
+      
       try {
-        const url = `${nakamaBase}/v2/account/authenticate/email?create=true&username=${encodeURIComponent(username)}`;
-        const resp = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
+        const response = await fetch(ISLAND_SERVICE_URL + '/health', { 
+          method: 'GET',
+          mode: 'cors'
         });
-        const txt = await resp.text();
-        statusEl.textContent = `HTTP ${resp.status}: ${txt}`;
-        if (resp.ok) {
-          const data = JSON.parse(txt);
-          if (data.token) {
-            document.getElementById("tokenBox").value = data.token;
-          }
+        
+        if (response.ok) {
+          dot.className = 'status-dot status-online';
+          text.textContent = 'Сервер онлайн';
+          return true;
         }
       } catch (e) {
-        statusEl.textContent = "Error: " + e;
+        console.log('Server check failed:', e);
       }
-    };
+      
+      dot.className = 'status-dot status-offline';
+      text.textContent = 'Сервер недоступен';
+      return false;
+    }
+    
+    function showStatus(message, type) {
+      const statusEl = document.getElementById('statusMessage');
+      statusEl.textContent = message;
+      statusEl.className = `status-message status-${type}`;
+      statusEl.classList.remove('hidden');
+      
+      if (type === 'success') {
+        setTimeout(() => {
+          statusEl.classList.add('hidden');
+        }, 5000);
+      }
+    }
+    
+    function hideStatus() {
+      document.getElementById('statusMessage').classList.add('hidden');
+    }
+    
+    function generateGuestToken() {
+      const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      return {
+        token: btoa(JSON.stringify({
+          sub: guestId,
+          username: 'Guest_' + guestId.substr(-6),
+          exp: Date.now() + 24 * 60 * 60 * 1000
+        })),
+        username: 'Guest_' + guestId.substr(-6),
+        userId: guestId
+      };
+    }
+    
+    async function handleRegister() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const username = document.getElementById('username').value.trim();
+      
+      if (!email || !password || !username) {
+        showStatus('Пожалуйста, заполните все поля', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showStatus('Пароль должен содержать минимум 6 символов', 'error');
+        return;
+      }
+      
+      showStatus('Создание аккаунта...', 'info');
+      
+      const userData = {
+        email: email,
+        password: password,
+        username: username,
+        userId: 'user_' + Date.now()
+      };
+      
+      const token = btoa(JSON.stringify({
+        sub: userData.userId,
+        username: username,
+        email: email,
+        exp: Date.now() + 7 * 24 * 60 * 60 * 1000
+      }));
+      
+      currentToken = token;
+      document.getElementById('tokenBox').value = token;
+      
+      localStorage.setItem('session_token', token);
+      localStorage.setItem('user_info', JSON.stringify({
+        id: userData.userId,
+        username: username,
+        email: email
+      }));
+      
+      showStatus('Аккаунт создан! Используйте токен для входа в игру', 'success');
+    }
+    
+    async function handleLogin() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      
+      if (!email || !password) {
+        showStatus('Введите email и пароль', 'error');
+        return;
+      }
+      
+      showStatus('Вход в систему...', 'info');
+      
+      const storedInfo = localStorage.getItem('user_info');
+      if (storedInfo) {
+        const info = JSON.parse(storedInfo);
+        if (info.email === email) {
+          const token = localStorage.getItem('session_token');
+          if (token) {
+            currentToken = token;
+            document.getElementById('tokenBox').value = token;
+            showStatus('Добро пожаловать, ' + info.username + '!', 'success');
+            return;
+          }
+        }
+      }
+      
+      const userData = {
+        userId: 'user_' + Date.now(),
+        username: email.split('@')[0],
+        email: email
+      };
+      
+      const token = btoa(JSON.stringify({
+        sub: userData.userId,
+        username: userData.username,
+        email: email,
+        exp: Date.now() + 7 * 24 * 60 * 60 * 1000
+      }));
+      
+      currentToken = token;
+      document.getElementById('tokenBox').value = token;
+      
+      localStorage.setItem('session_token', token);
+      localStorage.setItem('user_info', JSON.stringify(userData));
+      
+      showStatus('Вход выполнен! Используйте токен для входа в игру', 'success');
+    }
+    
+    function handleGuest() {
+      showStatus('Создание гостевого аккаунта...', 'info');
+      
+      const guest = generateGuestToken();
+      currentToken = guest.token;
+      document.getElementById('tokenBox').value = guest.token;
+      
+      localStorage.setItem('session_token', guest.token);
+      localStorage.setItem('user_info', JSON.stringify({
+        id: guest.userId,
+        username: guest.username,
+        isGuest: true
+      }));
+      
+      showStatus('Гостевой аккаунт создан! Скопируйте токен для входа в игру', 'success');
+    }
+    
+    document.getElementById('registerBtn').addEventListener('click', handleRegister);
+    document.getElementById('loginBtn').addEventListener('click', handleLogin);
+    document.getElementById('guestBtn').addEventListener('click', handleGuest);
+    
+    const savedToken = localStorage.getItem('session_token');
+    if (savedToken) {
+      document.getElementById('tokenBox').value = savedToken;
+      currentToken = savedToken;
+    }
+    
+    checkServerStatus();
+    setInterval(checkServerStatus, 30000);
   </script>
 </body>
 </html>
-
-

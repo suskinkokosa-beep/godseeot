@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, abort
+from flask_cors import CORS
 import os, json
 from urllib.parse import urljoin
 import psycopg2
 from psycopg2.extras import Json, RealDictCursor
 
 app = Flask(__name__)
+CORS(app)
 
 REDIS_ENABLED = os.environ.get('REDIS_ENABLED', 'false').lower() == 'true'
 redis_client = None

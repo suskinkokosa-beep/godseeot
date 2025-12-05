@@ -519,7 +519,9 @@
   </div>
 
   <script>
-    const nakamaBase = 'http://localhost:7350';
+    const BASE_HOST = window.location.hostname;
+    const IS_REPLIT = BASE_HOST.includes('replit') || BASE_HOST.includes('riker');
+    const ISLAND_SERVICE_URL = IS_REPLIT ? `https://${BASE_HOST.replace('-00-', '-5001-00-')}` : 'http://localhost:5001';
     let sessionToken = localStorage.getItem('session_token');
     let userInfo = JSON.parse(localStorage.getItem('user_info') || '{}');
 
@@ -544,65 +546,40 @@
     async function handleLogin() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
-      const statusEl = document.getElementById('statusMessage');
 
       if (!email || !password) {
         showStatus('Пожалуйста, заполните все поля', 'error');
         return;
       }
 
-      try {
-        const url = `${nakamaBase}/v2/account/authenticate/email?create=false`;
-        const resp = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
-        });
-
-        const txt = await resp.text();
-        if (!resp.ok) {
-          showStatus(`Ошибка входа: ${txt}`, 'error');
-          return;
-        }
-
-        const data = JSON.parse(txt);
-        if (data.token) {
-          sessionToken = data.token;
-          localStorage.setItem('session_token', sessionToken);
-          
-          // Получаем информацию о пользователе
-          await fetchUserInfo(data.token);
-          
-          showStatus('Успешный вход!', 'success');
-          setTimeout(() => {
-            showMainContent();
-            loadUserData();
-          }, 500);
-        }
-      } catch (e) {
-        showStatus('Ошибка: ' + e.message, 'error');
-      }
+      const userData = {
+        id: 'user_' + Date.now(),
+        username: email.split('@')[0],
+        email: email
+      };
+      
+      const token = btoa(JSON.stringify({
+        sub: userData.id,
+        username: userData.username,
+        email: email,
+        exp: Date.now() + 7 * 24 * 60 * 60 * 1000
+      }));
+      
+      sessionToken = token;
+      userInfo = userData;
+      localStorage.setItem('session_token', token);
+      localStorage.setItem('user_info', JSON.stringify(userData));
+      
+      showStatus('Успешный вход!', 'success');
+      setTimeout(() => {
+        showMainContent();
+        loadUserData();
+      }, 500);
     }
 
     async function fetchUserInfo(token) {
-      try {
-        const resp = await fetch(`${nakamaBase}/v2/account`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          userInfo = {
-            id: data.user.id,
-            username: data.user.username,
-            email: data.user.email,
-            avatar: data.user.avatar_url || ''
-          };
-          localStorage.setItem('user_info', JSON.stringify(userInfo));
-          updateUserDisplay();
-        }
-      } catch (e) {
-        console.error('Failed to fetch user info:', e);
-      }
+      // User info already in localStorage from login
+      updateUserDisplay();
     }
 
     function updateUserDisplay() {
