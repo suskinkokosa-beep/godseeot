@@ -1,0 +1,107 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: isleborn
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  nakama:
+    image: heroiclabs/nakama:3.5.0
+    environment:
+      - "DATABASE_URL=postgresql://postgres:postgres@postgres:5432/isleborn?sslmode=disable"
+      - "RUNTIME_PATH=/nakama/modules"
+    volumes:
+      - ./nakama_runtime:/nakama/modules
+    ports:
+      - "7350:7350"
+      - "7351:7351"
+      - "7352:7352"
+    depends_on:
+      - postgres
+      - redis
+
+  gateway:
+    build: ./gateway
+    environment:
+      - WORLD_WS=ws://world:8090/ws
+      - NAKAMA_RPC_URL=http://nakama:7350/v2/rpc/validate_session
+      - NAKAMA_HTTP_KEY=defaulthttpkey
+      - USE_REDIS_RATE=true
+      - REDIS_URL=redis://redis:6379/0
+      - RATE_LIMIT_RPS=5
+      - RATE_LIMIT_BURST=10
+    ports:
+      - "8080:8080"
+    depends_on:
+      - nakama
+      - redis
+
+  world:
+    build: ./godot_server
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./godot_server/export:/export
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:9.0.0
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  pgdata:
+
+# Note: ensure Postgres DATABASE_URL is reachable for migration scripts
+
+
+island_service:
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+  build: ./island_service
+  environment:
+    - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/isleborn
+  ports:
+    - "5000:5000"
+  depends_on:
+    - postgres
+
+
+instance_manager:
+  build: ./instance_manager
+  environment:
+    - GODOT_IMAGE=isleborn/godot_server:latest
+    - DOCKER_NETWORK=bridge
+  ports:
+    - "5100:5100"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  depends_on:
+    - island_service
