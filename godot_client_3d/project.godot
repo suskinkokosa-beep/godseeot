@@ -18,6 +18,9 @@ config/features=PackedStringArray("4.4")
 [autoload]
 
 Constants="*res://src/core/constants.gd"
+SkillSystem="*res://scripts/systems/skill_system.gd"
+ExpandedItemDatabase="*res://scripts/data/expanded_item_database.gd"
+ExpandedRecipeDatabase="*res://scripts/data/expanded_recipe_database.gd"
 ItemDatabase="*res://scripts/data/item_database.gd"
 MonsterDatabase="*res://scripts/data/monster_database.gd"
 ShipDatabase="*res://scripts/data/ship_database.gd"
