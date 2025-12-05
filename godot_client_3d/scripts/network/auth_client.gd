@@ -10,11 +10,11 @@ class_name AuthClient
 signal login_success
 signal login_failed(reason: String)
 
-@export var nakama_base_url: String = "http://localhost:7350"
+@export var nakama_base_url: String = "https://3fe505af-22db-4d7c-b40b-2af9e0a2a277-00-ycx4mbix4b5j.riker.replit.dev"
 
 var token: String = ""
 var username: String = ""
-var world_ws: String = "ws://localhost:8080/ws"
+var world_ws: String = "wss://3fe505af-22db-4d7c-b40b-2af9e0a2a277-00-ycx4mbix4b5j.riker.replit.dev/ws"
 var character_name: String = ""
 var appearance: Dictionary = {}
 
