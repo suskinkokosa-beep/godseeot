@@ -110,7 +110,8 @@ func (c *JWKSClient) ValidateToken(ctx context.Context, tokenString string) (jwt
         if err != nil {
                 return nil, fmt.Errorf("jwt parse/verify: %w", err)
         }
-        if exp, ok := tok.Expiration(); ok {
+        exp := tok.Expiration()
+        if !exp.IsZero() {
                 if time.Now().After(exp) {
                         return nil, errors.New("token expired")
                 }
