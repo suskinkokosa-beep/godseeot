@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://male_default"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_male"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Material_male"]
+albedo_color = Color(0.8, 0.6, 0.4, 1)
+roughness = 0.7
+
+[node name="MaleCharacter" type="Node3D"]
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_male")
+surface_material_override/0 = SubResource("Material_male")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 1.7, 0)
+mesh = SubResource("CapsuleMesh_male")
+surface_material_override/0 = SubResource("Material_male")
