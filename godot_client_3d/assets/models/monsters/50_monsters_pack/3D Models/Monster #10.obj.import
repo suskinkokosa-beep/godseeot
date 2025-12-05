@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bys73yd7yy2gw"
+path="res://.godot/imported/Monster #10.obj-462c7db17cf12b76ef366b220540691c.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Monster #10.obj-462c7db17cf12b76ef366b220540691c.mesh"]
+
+source_file="res://assets/models/monsters/50_monsters_pack/3D Models/Monster #10.obj"
+dest_files=["res://.godot/imported/Monster #10.obj-462c7db17cf12b76ef366b220540691c.mesh", "res://.godot/imported/Monster #10.obj-462c7db17cf12b76ef366b220540691c.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false
