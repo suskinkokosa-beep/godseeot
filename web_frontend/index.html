@@ -341,34 +341,38 @@
       
       showStatus(isRegisterMode ? 'Создание аккаунта...' : 'Вход в систему...', 'info');
       
-      const userData = {
-        email: email,
-        password: password,
-        username: isRegisterMode ? username : email.split('@')[0],
-        userId: 'user_' + Date.now()
-      };
-      
-      const token = btoa(JSON.stringify({
-        sub: userData.userId,
-        username: userData.username,
-        email: email,
-        exp: Date.now() + 7 * 24 * 60 * 60 * 1000
-      }));
-      
-      currentToken = token;
-      
-      localStorage.setItem('session_token', token);
-      localStorage.setItem('user_info', JSON.stringify({
-        id: userData.userId,
-        username: userData.username,
-        email: email
-      }));
-      
-      showStatus(isRegisterMode ? 'Аккаунт создан!' : 'Вход выполнен!', 'success');
-      
-      setTimeout(() => {
-        window.location.href = 'dashboard.html';
-      }, 1000);
+      try {
+        const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
+        const payload = isRegisterMode 
+          ? { email, password, username }
+          : { email, password };
+        
+        const response = await fetch(API_BASE + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          showStatus(data.error || 'Ошибка', 'error');
+          return;
+        }
+        
+        currentToken = data.token;
+        localStorage.setItem('session_token', data.token);
+        localStorage.setItem('user_info', JSON.stringify(data.user));
+        
+        showStatus(isRegisterMode ? 'Аккаунт создан!' : 'Вход выполнен!', 'success');
+        
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1000);
+      } catch (e) {
+        console.error('Auth error:', e);
+        showStatus('Ошибка подключения к серверу', 'error');
+      }
     }
     
     document.getElementById('loginBtn').addEventListener('click', handleAuth);

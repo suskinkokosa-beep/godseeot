@@ -465,7 +465,33 @@
     if (!sessionToken || !userInfo.id) {
       window.location.href = 'index.html';
     } else {
-      loadUserData();
+      verifyAndLoadData();
+    }
+    
+    async function verifyAndLoadData() {
+      try {
+        const response = await fetch(API_BASE + '/api/auth/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: sessionToken })
+        });
+        
+        if (!response.ok) {
+          localStorage.removeItem('session_token');
+          localStorage.removeItem('user_info');
+          window.location.href = 'index.html';
+          return;
+        }
+        
+        const data = await response.json();
+        userInfo = data.user;
+        localStorage.setItem('user_info', JSON.stringify(userInfo));
+        pearlsBalance = userInfo.pearls || 0;
+        loadUserData();
+      } catch (e) {
+        console.error('Verify error:', e);
+        loadUserData();
+      }
     }
 
     function updateUserDisplay() {
@@ -475,7 +501,16 @@
       avatar.textContent = (userInfo.username || 'U')[0].toUpperCase();
     }
 
-    function logout() {
+    async function logout() {
+      try {
+        await fetch(API_BASE + '/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: sessionToken })
+        });
+      } catch (e) {
+        console.error('Logout error:', e);
+      }
       localStorage.removeItem('session_token');
       localStorage.removeItem('user_info');
       window.location.href = 'index.html';
@@ -564,10 +599,8 @@
     }
     
     function loadPearls() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const pearlsParam = urlParams.get('pearls');
-      if (pearlsParam) {
-        pearlsBalance = parseInt(pearlsParam) || 0;
+      if (userInfo.pearls !== undefined) {
+        pearlsBalance = userInfo.pearls;
       }
       updatePearlsDisplay();
     }
